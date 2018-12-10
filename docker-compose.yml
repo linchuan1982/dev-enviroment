@@ -1,0 +1,15 @@
+version: '3.7'
+services:
+  base:
+    container_name: base
+    image: base:0.1
+    stdin_open: true
+    tty: true
+    network_mode: "service:proxy"
+    depends_on:
+      - proxy
+  proxy:
+    container_name: proxy
+    restart: always
+    image: dev/proxy:0.5
+

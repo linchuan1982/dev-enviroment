@@ -1,0 +1,10 @@
+FROM ubuntu:16.04
+COPY proxy /proxy
+
+RUN apt-get update -qq &&\
+    apt-get install -qq --no-install-recommends polipo shadowsocks &&\
+echo "==> Clean up..."  &&\   
+	rm -rf /var/lib/apt/lists/*     &&\
+    chmod +x /proxy/start_proxy.sh
+
+CMD ["/proxy/start_proxy.sh"]

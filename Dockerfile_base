@@ -1,0 +1,7 @@
+FROM ubuntu:16.04
+
+RUN apt-get update -qq &&\
+    apt-get install -qq --no-install-recommends vim python-pip &&\
+    pip install --no-cache-dir requests &&\
+echo "==> Clean up..."  &&\   
+	rm -rf /var/lib/apt/lists/*
