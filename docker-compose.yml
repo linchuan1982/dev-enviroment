@@ -1,15 +1,28 @@
 version: '3.7'
 services:
-  base:
-    container_name: base
-    image: base:0.1
-    stdin_open: true
-    tty: true
-    network_mode: "service:proxy"
-    depends_on:
-      - proxy
   proxy:
     container_name: proxy
     restart: always
     image: dev/proxy:0.5
-
+    network_mode: "service:webserver"
+  rabbitmq:
+    container_name: rabbitmq
+    hostname: my-rabbitmq
+    restart: always
+    image: rabbitmq:latest
+    stdin_open: true
+    tty: true
+  webserver:
+    container_name: webserver
+    volumes:
+      - type: bind
+        source: /data/code/aishipin/aivideo
+        target: /var/www/aishipin
+    restart: always
+    ports:
+      - '8080:80/tcp'
+    environment:
+      - CLUSTER='dev'
+    image: dev/web:0.1
+    stdin_open: true
+    tty: true

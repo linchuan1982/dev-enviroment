@@ -1,0 +1,5 @@
+requests
+lxml
+youtube-dl
+retrying
+flask

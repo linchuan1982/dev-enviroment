@@ -13,7 +13,6 @@ RUN apt-get install -y python-dev mysql-client libmysqlclient-dev
 RUN apt-get install -y sox libsox-fmt-mp3 lame locales sudo
 RUN apt-get install -y wget unzip vim
 RUN apt-get install -y nginx
-RUN apt-get install -y --no-install-recommends polipo
 RUN rm -rf /var/lib/apt/lists/*
 
 RUN wget 'https://bootstrap.pypa.io/get-pip.py'
@@ -95,17 +94,18 @@ RUN sudo chown root /opt/filebeat-6.3.2-linux-x86_64/filebeat.yml
 # Code
 WORKDIR /root
 RUN mkdir -p /var/www
-COPY aivideo /var/www/aishipin
+# COPY aivideo /var/www/aishipin
 RUN chown -R www-data:www-data /var/www
-RUN pip install -r /var/www/aishipin/requirements.txt
+
+COPY aivideo/requirements.txt /tmp/web_requirements.txt
+RUN pip install -r /tmp/web_requirements.txt
 
 # AiVideo Download
-RUN pip install -r /var/www/aishipin/aivideo_dl/requirements.txt
+COPY aivideo/aivideo_dl/requirements.txt /tmp/dl_requirements.txt
+RUN pip install -r /tmp/dl_requirements.txt
 
-# proxy
-COPY deploy/web_server/shadowsocks.json /etc/shadowsocks.json
 
-ADD deploy/web_server/start.sh /var/www/aishipin
+ADD deploy/web_server/start.sh /var/www/aishipin/start.sh
 RUN chmod +x /var/www/aishipin/start.sh
 
 ADD deploy/web_server/crontab /etc/cron.d/aivideo
@@ -121,5 +121,3 @@ EXPOSE 23
 
 WORKDIR /var/www/aishipin
 
-# Entry
-CMD ["/var/www/aishipin/start.sh"]
